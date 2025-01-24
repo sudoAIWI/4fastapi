@@ -36,3 +36,4 @@ def delete_movie(movie_id: int):
     db_movie.delete_instance()
     return db_movie
 
+
