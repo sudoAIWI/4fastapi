@@ -57,10 +57,40 @@ def add_movie(movie: schemas.ActorCreate):
     return movie
 
 
+@app.delete("/actors/{actor_id}", response_model=schemas.Actor)
+def delete_actor(actor_id: int):
+    db_movie = models.Actor.filter(models.Actor.id == actor_id).first()
+    if db_movie is None:
+        raise HTTPException(status_code=404, detail="Movie not found")
+    db_movie.delete_instance()
+    return db_movie
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#śmieci
 
 @app.post("/actors/", response_model=schemas.Actor)
 def add_actor(movie: schemas.ActorBase):
