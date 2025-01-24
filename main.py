@@ -97,7 +97,7 @@ def post_movieactors(movie_id: int):
 
 
 #śmieci
-
+"""
 @app.post("/actors/", response_model=schemas.Actor)
 def add_actor(movie: schemas.ActorBase):
     movie = models.Actor.create(**movie.dict())
@@ -113,3 +113,5 @@ def get_actors():
 def add_actor(movie: schemas.ActorBase):
     movie = models.Actor.create(**movie.dict())
     return movie
+
+    """
