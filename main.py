@@ -43,7 +43,23 @@ def get_actors():
     # movies = crud.get_movies()
     # return movies
 
-@app.post("/actors/", response_model=schemas.Movie)
+@app.get("/actors/{actor_id}", response_model=schemas.Actor)
+def get_movie(actor_id: int):
+    db_movie = models.Actor.filter(models.Actor.id == actor_id).first()
+    if db_movie is None:
+        raise HTTPException(status_code=404, detail="Movie not found")
+    return db_movie
+
+
+
+
+
+
+
+
+
+
+@app.post("/actors/", response_model=schemas.Actor)
 def add_actor(movie: schemas.ActorBase):
     movie = models.Actor.create(**movie.dict())
     return movie
