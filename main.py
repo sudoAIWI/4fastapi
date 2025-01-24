@@ -37,3 +37,13 @@ def delete_movie(movie_id: int):
     return db_movie
 
 
+@app.get("/actors/", response_model=List[schemas.Actor])
+def get_actors():
+    return list(models.Actor.select())
+    # movies = crud.get_movies()
+    # return movies
+
+@app.post("/actors/", response_model=schemas.Movie)
+def add_actor(movie: schemas.ActorBase):
+    movie = models.Actor.create(**movie.dict())
+    return movie
