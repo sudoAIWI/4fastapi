@@ -66,6 +66,12 @@ def delete_actor(actor_id: int):
     return db_movie
 
 
+@app.post("/movies/{movie_id}/actors", response_model=schemas.Movie)
+def post_movieactors(movie_id: int):
+    db_movie = models.Movie.filter(models.Movie.id == movie_id).first()
+    if db_movie is None:
+        raise HTTPException(status_code=404, detail="Movie not found")
+    return db_movie
 
 
 
