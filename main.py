@@ -1,6 +1,7 @@
 from typing import List
 
 from fastapi import Depends, FastAPI, HTTPException
+from pydantic.v1.utils import GetterDict
 
 import database
 import schemas
@@ -35,3 +36,7 @@ def delete_movie(movie_id: int):
     db_movie.delete_instance()
     return db_movie
 
+@app.post("/movies/", response_model=schemas.Movie)
+def add_movie(movie: schemas.MovieBase):
+    movie = models.Movie.create(**movie.dict())
+    return movie
