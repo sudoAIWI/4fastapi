@@ -1,47 +1,37 @@
-from fastapi import FastAPI
-from typing import Optional
-from pydantic import BaseModel
+from typing import List
+
+from fastapi import Depends, FastAPI, HTTPException
+
+import database
+import schemas
+import models
+from database import db_state_default
 
 app = FastAPI()
 
+@app.get("/movies/", response_model=List[schemas.Movie])
+def get_movies():
+    return list(models.Movie.select())
+    # movies = crud.get_movies()
+    # return movies
 
+@app.post("/movies/", response_model=schemas.Movie)
+def add_movie(movie: schemas.MovieBase):
+    movie = models.Movie.create(**movie.dict())
+    return movie
 
-@app.get('/blog')
-def index(limit=10, published: bool = True, sort: Optional[str] = None):
-    #return published
-    if published:
-        return {'data': f'{limit} published blog from the db'}
-    else:
-        return{'data': f'{limit} blogs from the db'}
+@app.get("/movies/{movie_id}", response_model=schemas.Movie)
+def get_movie(movie_id: int):
+    db_movie = models.Movie.filter(models.Movie.id == movie_id).first()
+    if db_movie is None:
+        raise HTTPException(status_code=404, detail="Movie not found")
+    return db_movie
 
+@app.delete("/movies/{movie_id}", response_model=schemas.Movie)
+def delete_movie(movie_id: int):
+    db_movie = models.Movie.filter(models.Movie.id == movie_id).first()
+    if db_movie is None:
+        raise HTTPException(status_code=404, detail="Movie not found")
+    db_movie.delete_instance()
+    return db_movie
 
-@app.get('/')
-def index():
-    return {'data': {'bloglist'}}
-
-@app.get('/about')
-def about():
-    return {'data':{'about page'}}
-
-@app.get('/blog/unpublished')
-def unpublished():
-    return {'data':'all unpublished blogs'}
-
-@app.get('/blog/{id}')
-def show(id: int):
-    return {'data': id}
-
-@app.get('/blog/{id}/comments')
-def comments(id):
-    return {'data': {'1', '2'}}
-
-
-class Blog(BaseModel):
-    title: str
-    body:str
-    published: Optional[bool]
-
-@app.post('/blog')
-def create_blog(request: Blog):
-    return request
-    return{'data': f'Blog is created with title as {request.title}'}
