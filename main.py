@@ -51,7 +51,10 @@ def get_movie(actor_id: int):
     return db_movie
 
 
-
+@app.post("/actors/", response_model=schemas.Actor)
+def add_movie(movie: schemas.ActorCreate):
+    movie = models.Actor.create(**movie.dict())
+    return movie
 
 
 
