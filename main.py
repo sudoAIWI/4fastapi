@@ -47,3 +47,14 @@ def get_actors():
 def add_actor(movie: schemas.ActorBase):
     movie = models.Actor.create(**movie.dict())
     return movie
+
+@app.get("/actors/{actor_id}", response_model=List[schemas.Actor])
+def get_actors():
+    return list(models.Actor.select())
+    # movies = crud.get_movies()
+    # return movies
+
+@app.post("/actors/{actor_id}", response_model=schemas.Movie)
+def add_actor(movie: schemas.ActorBase):
+    movie = models.Actor.create(**movie.dict())
+    return movie
